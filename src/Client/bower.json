@@ -1,0 +1,22 @@
+{
+  "name": "gridos",
+  "description": "Resposive interface for managing and consuming cloud content",
+  "main": "index.html",
+  "keywords": [
+    "GridOS",
+    "Vouzamo"
+  ],
+  "authors": [
+    "Vouzamo"
+  ],
+  "license": "MIT",
+  "homepage": "http://gridOS.vouzamo.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

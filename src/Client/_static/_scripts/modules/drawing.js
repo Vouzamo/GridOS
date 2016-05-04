@@ -7,7 +7,7 @@
             context: null,
             background: new Image(),
             init: function () {
-                var self = this;
+                var self = grid.drawing;
 
                 self.context = grid.settings.$canvas.get(0).getContext('2d');
                 self.resize();
@@ -187,8 +187,7 @@
         }
     });
 
-    $.subscribe('ready', grid.drawing.init());
-    //$.bind('resize', grid.drawing.resize());
-    $(window).resize(grid.drawing.resize);
+    $.subscribe('ready', grid.drawing.init);
+    $.subscribe('resize', grid.drawing.resize);
 
 }(jQuery));

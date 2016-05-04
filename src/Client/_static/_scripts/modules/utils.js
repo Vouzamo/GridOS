@@ -36,6 +36,6 @@
         }
     });
 
-    $.subscribe('ready', grid.utils.init());
+    $.subscribe('ready', grid.utils.init);
 
 }(jQuery));

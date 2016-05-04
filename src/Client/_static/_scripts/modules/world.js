@@ -77,7 +77,7 @@
                 items: []
             },
             init: function () {
-                var self = this;
+                var self = grid.world;
 
                 self.loadData();
             },
@@ -106,6 +106,6 @@
         }
     });
 
-    $.subscribe('ready', grid.world.init());
+    $.subscribe('ready', grid.world.init);
 
 }(jQuery));

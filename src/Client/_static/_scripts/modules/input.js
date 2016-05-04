@@ -85,8 +85,8 @@
         }
     });
 
-    $.subscribe('ready', grid.input.init());
-    $.subscribe('update', grid.input.update());
+    $.subscribe('ready', grid.input.init);
+    $.subscribe('update', grid.input.update);
 
     window.addEventListener("mousewheel", grid.input.wheel, false);
     window.addEventListener('DOMMouseScroll', grid.input.wheel, false);

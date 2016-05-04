@@ -4,21 +4,15 @@
 
     $.extend(grid, {
         ready: function () {
-            var self = this;
-
             $.publish('ready');
+            $(window).resize(grid.resize);
         },
         update: function () {
-            var self = this;
-
-            setTimeout(function () {
-                console.log('updating');
+            setInterval(function () {
                 $.publish('update');
             }, 1000);
         },
         resize: function () {
-            var self = this;
-
             $.publish('resize');
         }
     });

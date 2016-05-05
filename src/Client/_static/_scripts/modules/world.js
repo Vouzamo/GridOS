@@ -83,8 +83,8 @@
             },
             loadData: function () {
                 var self = this;
-                var apiRoot = 'http://localhost:51364/_api/'
-                var apiEndpoint = 'world/data';
+                var apiRoot = 'http://localhost:51364/_api/';
+                var apiEndpoint = 'world/references';
                 
                 $.ajax({
                     type: "POST",
@@ -100,19 +100,34 @@
                     success: function(data) {
                         self.data.items = data;
 
-                        if (self.context.layer != '/') {
-                            self.data.items.push({
-                                world: self.context.world,
-                                layer: grid.utils.http.parent(),
-                                name: 'back',
-                                position: {
-                                    x: 0,
-                                    y: 0
-                                }
-                            })
-                        }
+                        //if (self.context.layer != '/') {
+                        //    self.data.items.push({
+                        //        world: self.context.world,
+                        //        layer: grid.utils.http.parent(),
+                        //        name: 'back',
+                        //        position: {
+                        //            x: 0,
+                        //            y: 0
+                        //        }
+                        //    });
+                        //}
 
                         grid.drawing.draw();
+                    }
+                });
+            },
+            invoke: function(ref) {
+                var self = this;
+                var apiRoot = 'http://localhost:51364/_api/';
+                var apiEndpoint = 'world/item';
+
+                $.ajax({
+                    type: 'POST',
+                    url: apiRoot + apiEndpoint,
+                    data: JSON.stringify(ref),
+                    contentType: 'application/json;charset=utf-8',
+                    success: function(data) {
+                        console.log(data);
                     }
                 });
             }

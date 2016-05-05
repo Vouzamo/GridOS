@@ -34,13 +34,7 @@
                                 screenPosition.y += grid.drawing.context.canvas.height / 2;
 
                                 if (grid.utils.geometry.isInCircleBounds(screenPosition, 20, clickPosition)) {
-                                    console.log('Collision with...');
-                                    console.log(item);
-                                    if (item.name != 'back') {
-                                        window.location.href = grid.utils.http.current() + item.name + '/';
-                                    } else {
-                                        window.location.href = grid.utils.http.parent();
-                                    }
+                                    grid.world.invoke(item);
                                 }
                             });
                         }

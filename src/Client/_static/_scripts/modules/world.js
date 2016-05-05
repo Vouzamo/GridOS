@@ -6,7 +6,7 @@
         world: {
             context: {
                 world: grid.utils.http.host,
-                layer: grid.utils.http.path,
+                layer: grid.utils.http.current(),
                 parent: grid.utils.http.parent()
             },
             viewport: {
@@ -97,8 +97,21 @@
                             y: Math.floor(self.viewport.position.y)
                         }
                     },
-                    success: function (data) {
+                    success: function(data) {
                         self.data.items = data;
+
+                        if (self.context.layer != '/') {
+                            self.data.items.push({
+                                world: self.context.world,
+                                layer: grid.utils.http.parent(),
+                                name: 'back',
+                                position: {
+                                    x: 0,
+                                    y: 0
+                                }
+                            })
+                        }
+
                         grid.drawing.draw();
                     }
                 });

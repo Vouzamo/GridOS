@@ -6,6 +6,7 @@
         ready: function () {
             $.publish('ready');
             $(window).resize(grid.resize);
+            grid.resize();
         },
         update: function () {
             setInterval(function () {

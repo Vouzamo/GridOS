@@ -128,6 +128,11 @@
                     contentType: 'application/json;charset=utf-8',
                     success: function(data) {
                         console.log(data);
+                        if (data && data.type == 0) {
+                            window.location.href = data.url;
+                        } else if (data && data.type == 1) {
+                            modal.open({ content: data.html });
+                        }
                     }
                 });
             }

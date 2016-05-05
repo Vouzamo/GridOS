@@ -80,34 +80,40 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="_static\_scripts\init.js">
+    <Content Include="_static\images\close.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\modules\drawing.js">
+    <Content Include="_static\scripts\init.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\modules\events.js">
+    <Content Include="_static\scripts\modules\drawing.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\modules\input.js">
+    <Content Include="_static\scripts\modules\events.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\modules\settings.js">
+    <Content Include="_static\scripts\modules\input.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\modules\utils.js">
+    <Content Include="_static\scripts\modules\settings.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\modules\world.js">
+    <Content Include="_static\scripts\modules\utils.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_static\scripts\modules\world.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="_static\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\quo.js">
+    <Content Include="_static\scripts\plugins\quo.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="_static\_scripts\plugins\pubsub.js">
+    <Content Include="_static\scripts\plugins\modal.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_static\scripts\plugins\pubsub.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

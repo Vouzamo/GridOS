@@ -16,4 +16,17 @@ namespace Server.Models
             return new HyperlinkAction(parentUrl);
         }
     }
+
+    public class FolderItemType : ItemType
+    {
+        public FolderItemType() : base("Folder")
+        {
+            
+        }
+
+        public override IAction Invoke(IReference reference, ValueCollection values)
+        {
+            return new HyperlinkAction(reference.Layer + reference.Name.ToLower() + '/');
+        }
+    }
 }

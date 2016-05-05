@@ -12,11 +12,38 @@
             init: function () {
                 var self = grid.input;
 
-                var gestures = ['swiping', 'swipe', 'pinching', 'pinch'];
+                var gestures = ['doubleTap', 'swiping', 'swipe', 'pinching', 'pinch'];
 
                 gestures.forEach(function (type) {
 
                     $$('canvas').on(type, function (ev) {
+
+                        if (type == 'doubleTap') {
+                            ev.preventDefault();
+
+                            var clickPosition = ev.touch;
+
+                            grid.world.data.items.forEach(function(item) {
+                                var viewportPosition = {
+                                    x: item.position.x - grid.world.viewport.position.x,
+                                    y: item.position.y - grid.world.viewport.position.y
+                                }
+
+                                var screenPosition = grid.world.viewport.toScreenPosition(viewportPosition);
+                                screenPosition.x += grid.drawing.context.canvas.width / 2;
+                                screenPosition.y += grid.drawing.context.canvas.height / 2;
+
+                                if (grid.utils.geometry.isInCircleBounds(screenPosition, 20, clickPosition)) {
+                                    console.log('Collision with...');
+                                    console.log(item);
+                                    if (item.name != 'back') {
+                                        window.location.href = grid.utils.http.current() + item.name + '/';
+                                    } else {
+                                        window.location.href = grid.utils.http.parent();
+                                    }
+                                }
+                            });
+                        }
 
                         if (type == 'swiping') {
                             ev.preventDefault();

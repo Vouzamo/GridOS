@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Server.Models;
 
@@ -16,11 +15,14 @@ namespace Server.Controllers
         {
             Data = new List<Reference>();
 
-            Data.Add(new Reference("localhost:9000", "/", Vector2D.Zero, "Home", Guid.Empty));
             Data.Add(new Reference("localhost:9000", "/", new Vector2D(0, 1), "Contacts", Guid.Empty));
             Data.Add(new Reference("localhost:9000", "/", new Vector2D(1, 0), "Images", Guid.Empty));
             Data.Add(new Reference("localhost:9000", "/", new Vector2D(0, -1), "Video", Guid.Empty));
             Data.Add(new Reference("localhost:9000", "/", new Vector2D(-1, 0), "Folder", Guid.Empty));
+
+            Data.Add(new Reference("localhost:9000", "/contacts/", new Vector2D(-1, 0), "Charlotte", Guid.Empty));
+            Data.Add(new Reference("localhost:9000", "/contacts/", new Vector2D(0, 1), "Vanessa", Guid.Empty));
+            Data.Add(new Reference("localhost:9000", "/contacts/", new Vector2D(1, 0), "Pom", Guid.Empty));
         }
 
         [HttpPost("data")]

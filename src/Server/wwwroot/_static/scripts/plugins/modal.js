@@ -69,10 +69,5 @@
         $('body').append($overlay, $modal);
     });
 
-    $close.click(function (e) {
-        e.preventDefault();
-        method.close();
-    });
-
     return method;
 }());

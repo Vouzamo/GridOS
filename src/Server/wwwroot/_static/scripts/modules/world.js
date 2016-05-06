@@ -89,15 +89,6 @@
             init: function () {
                 var self = grid.world;
 
-                $('#home-button').click(function () {
-                    self.viewport.position = {
-                        x: 0,
-                        y: 0
-                    };
-
-                    grid.drawing.draw();
-                });
-
                 self.loadData();
             },
             loadData: function () {

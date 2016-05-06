@@ -70,10 +70,10 @@
                             self.pinchDelta = ev.touch.delta;
 
                             if (magnitude > 0) {
-                                grid.world.viewport.zoomIn();
+                                grid.world.viewport.zoomOut();
                             }
                             else if (magnitude < 0) {
-                                grid.world.viewport.zoomOut();
+                                grid.world.viewport.zoomIn();
                             }
                         }
 
@@ -110,5 +110,14 @@
 
     window.addEventListener("mousewheel", grid.input.wheel, false);
     window.addEventListener('DOMMouseScroll', grid.input.wheel, false);
+
+    $$('#home-button').touch(function() {
+        grid.world.viewport.position = { x: 0, y: 0 };
+        grid.drawing.draw();
+    });
+
+    $$('#close').touch(function () {
+        modal.close();
+    });
 
 }(jQuery, $$));

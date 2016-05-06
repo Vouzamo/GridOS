@@ -34,20 +34,20 @@ namespace Server.Controllers
             // References
             References = new List<Reference>();
 
-            References.Add(new Reference("localhost:51364", "/", new Vector2D(0, 1), "Contacts", childFolder.Id));
-            References.Add(new Reference("localhost:51364", "/", new Vector2D(1, 0), "Rayman", image1.Id));
-            References.Add(new Reference("localhost:51364", "/", new Vector2D(0, -1), "Video", childFolder.Id));
-            References.Add(new Reference("localhost:51364", "/", new Vector2D(-1, 0), "Folder", childFolder.Id));
+            References.Add(new Reference("*", "/", new Vector2D(0, 1), "Contacts", childFolder.Id));
+            References.Add(new Reference("*", "/", new Vector2D(1, 0), "Rayman", image1.Id));
+            References.Add(new Reference("*", "/", new Vector2D(0, -1), "Video", childFolder.Id));
+            References.Add(new Reference("*", "/", new Vector2D(-1, 0), "Folder", childFolder.Id));
 
-            References.Add(new Reference("localhost:51364", "/contacts/", new Vector2D(-1, 0), "Charlotte", childFolder.Id));
-            References.Add(new Reference("localhost:51364", "/contacts/", new Vector2D(0, 1), "Vanessa", childFolder.Id));
-            References.Add(new Reference("localhost:51364", "/contacts/", new Vector2D(1, 0), "Pom", childFolder.Id));
+            References.Add(new Reference("*", "/contacts/", new Vector2D(-1, 0), "Charlotte", childFolder.Id));
+            References.Add(new Reference("*", "/contacts/", new Vector2D(0, 1), "Vanessa", childFolder.Id));
+            References.Add(new Reference("*", "/contacts/", new Vector2D(1, 0), "Pom", childFolder.Id));
         }
 
         [HttpPost("references")]
         public IEnumerable<Reference> WorldData(string world, string layer, Vector2D position)
         {
-            var layerData = References.Where(m => m.World.Equals(world, StringComparison.OrdinalIgnoreCase) && m.Layer.Equals(layer, StringComparison.OrdinalIgnoreCase)).ToList();
+            var layerData = References.Where(m => (m.World.Equals(world, StringComparison.OrdinalIgnoreCase) || m.World.Equals("*")) && m.Layer.Equals(layer, StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (layer != "/")
             {

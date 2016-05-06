@@ -60,6 +60,11 @@
 			padding:20px;
 		}
 
+        #content img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
 		#close {
 			position:absolute;
 			background:url('/_static/images/close.png') 0 0 no-repeat;
@@ -67,15 +72,15 @@
 			height:27px;
 			display:block;
 			text-indent:-9999px;
-			top:-7px;
-			right:-7px;
+			top:0;
+			right:0;
 		}
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="/_static/scripts/plugins/quo.js"></script>
 </head>
 <body>
-    <canvas data-grid="http://localhost:51364/_api/"></canvas>
+    <canvas data-grid="/_api/"></canvas>
 
     <footer>
         <button id="home-button" class="home">

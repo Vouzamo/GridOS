@@ -17,9 +17,9 @@ namespace Server.Models
 
             if (values.TryGetValue(ImageUrlFieldName, out url))
             {
-                var html = string.Format("<img src=\"{0}\" alt=\"{1}\" />", url, reference.Name);
+                var html = $"<img src=\"{url}\" alt=\"{reference.Name}\" />";
 
-                return new OverlayAction("Image", html);
+                return new OverlayAction(reference.Name, html);
             }
 
             throw new Exception();

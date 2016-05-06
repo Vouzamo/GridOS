@@ -128,7 +128,7 @@
                         if (data && data.type == 0) {
                             window.location.href = data.url;
                         } else if (data && data.type == 1) {
-                            modal.open({ content: data.html });
+                            modal.open({ title: data.title, content: data.html });
                         }
                     }
                 });

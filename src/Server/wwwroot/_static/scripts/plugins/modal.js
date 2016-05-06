@@ -4,6 +4,7 @@
     $overlay,
     $modal,
     $content,
+    $title,
     $close;
 
     // Center the modal in the viewport
@@ -21,7 +22,8 @@
 
     // Open the modal
     method.open = function (settings) {
-        if (settings.content) {
+        if (settings) {
+            $title.empty().append(settings.title);
             $content.empty().append(settings.content);
 
             var $imgs = $content.find('img');
@@ -59,11 +61,12 @@
     $overlay = $('<div id="overlay"></div>');
     $modal = $('<div id="modal"></div>');
     $content = $('<div id="content"></div>');
-    $close = $('<a id="close" href="#">close</a>');
+    $title = $('<h2></h2>');
+    $close = $('<i id="close" class="fa fa-close fa-inverse"></i>');
 
     $modal.hide();
     $overlay.hide();
-    $modal.append($content, $close);
+    $modal.append($title, $content, $close);
 
     $(document).ready(function () {
         $('body').append($overlay, $modal);

@@ -51,6 +51,14 @@ namespace Server.Models
         }
     }
 
+    public class IntegerField : Field
+    {
+        public IntegerField(string fieldName) : base(fieldName, FieldType.Integer)
+        {
+
+        }
+    }
+
     public enum FieldType
     {
         Text,

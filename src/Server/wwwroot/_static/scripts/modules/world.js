@@ -55,9 +55,14 @@
                 toScreenPosition: function (worldPosition) {
                     var self = this;
 
+                    var viewportPosition = {
+                        x: worldPosition.x - self.position.x,
+                        y: worldPosition.y - self.position.y
+                    }
+
                     var screenPosition = {
-                        x: (worldPosition.x) * self.spacing.total(),
-                        y: (worldPosition.y) * self.spacing.total()
+                        x: (viewportPosition.x) * self.spacing.total(),
+                        y: (viewportPosition.y) * self.spacing.total()
                     };
 
                     return screenPosition;
@@ -65,9 +70,14 @@
                 toWorldPosition: function (screenPosition) {
                     var self = this;
 
+                    var viewportPosition = {
+                        x: screenPosition.x + self.position.x,
+                        y: screenPosition.y + self.position.y
+                    }
+
                     var worldPosition = {
-                        x: (screenPosition.x / self.spacing.total()),
-                        y: (screenPosition.y / self.spacing.total())
+                        x: (viewportPosition.x / self.spacing.total()),
+                        y: (viewportPosition.y / self.spacing.total())
                     }
 
                     return worldPosition;
@@ -79,11 +89,20 @@
             init: function () {
                 var self = grid.world;
 
+                $('#home-button').click(function () {
+                    self.viewport.position = {
+                        x: 0,
+                        y: 0
+                    };
+
+                    grid.drawing.draw();
+                });
+
                 self.loadData();
             },
             loadData: function () {
                 var self = this;
-                var apiRoot = 'http://localhost:51364/_api/';
+                var apiRoot = grid.settings.api;
                 var apiEndpoint = 'world/references';
                 
                 $.ajax({
@@ -100,25 +119,13 @@
                     success: function(data) {
                         self.data.items = data;
 
-                        //if (self.context.layer != '/') {
-                        //    self.data.items.push({
-                        //        world: self.context.world,
-                        //        layer: grid.utils.http.parent(),
-                        //        name: 'back',
-                        //        position: {
-                        //            x: 0,
-                        //            y: 0
-                        //        }
-                        //    });
-                        //}
-
                         grid.drawing.draw();
                     }
                 });
             },
             invoke: function(ref) {
                 var self = this;
-                var apiRoot = 'http://localhost:51364/_api/';
+                var apiRoot = grid.settings.api;
                 var apiEndpoint = 'world/item';
 
                 $.ajax({
@@ -127,7 +134,6 @@
                     data: JSON.stringify(ref),
                     contentType: 'application/json;charset=utf-8',
                     success: function(data) {
-                        console.log(data);
                         if (data && data.type == 0) {
                             window.location.href = data.url;
                         } else if (data && data.type == 1) {

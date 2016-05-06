@@ -117,7 +117,7 @@
                 var self = this;
 
                 self.drawGrid(world.viewport);
-                self.drawWorldItems(world.data.items, world.viewport)
+                self.drawWorldItems(world.data.items, world.viewport);
             },
             drawGrid: function (viewport) {
                 var self = this;
@@ -142,12 +142,7 @@
             drawWorldItem: function (item, viewport) {
                 var self = this;
 
-                var viewportPosition = {
-                    x: item.position.x - viewport.position.x,
-                    y: item.position.y - viewport.position.y
-                }
-
-                var screenPosition = viewport.toScreenPosition(viewportPosition);
+                var screenPosition = viewport.toScreenPosition(item.position);
 
                 self.drawCircle(screenPosition, 1);
 
@@ -161,12 +156,7 @@
             drawPoint(position, viewport) {
                 var self = this;
 
-                var viewportPosition = {
-                    x: position.x - viewport.position.x,
-                    y: position.y - viewport.position.y
-                }
-
-                var screenPosition = viewport.toScreenPosition(viewportPosition);
+                var screenPosition = viewport.toScreenPosition(position);
 
                 self.drawCircle(screenPosition, 0.1);
             },

@@ -24,12 +24,8 @@
                             var clickPosition = ev.touch;
 
                             grid.world.data.items.forEach(function(item) {
-                                var viewportPosition = {
-                                    x: item.position.x - grid.world.viewport.position.x,
-                                    y: item.position.y - grid.world.viewport.position.y
-                                }
+                                var screenPosition = grid.world.viewport.toScreenPosition(item.position);
 
-                                var screenPosition = grid.world.viewport.toScreenPosition(viewportPosition);
                                 screenPosition.x += grid.drawing.context.canvas.width / 2;
                                 screenPosition.y += grid.drawing.context.canvas.height / 2;
 
@@ -47,7 +43,10 @@
                                 y: self.swipeDelta.y - ev.touch.delta.y
                             }
 
-                            var worldDelta = grid.world.viewport.toWorldPosition(delta);
+                            var worldDelta = {
+                                x: (delta.x / grid.world.viewport.spacing.total()),
+                                y: (delta.y / grid.world.viewport.spacing.total())
+                            }
 
                             grid.world.viewport.pan(worldDelta);
 

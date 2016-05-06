@@ -34,14 +34,14 @@ namespace Server.Controllers
             // References
             References = new List<Reference>();
 
-            References.Add(new Reference("localhost:9000", "/", new Vector2D(0, 1), "Contacts", childFolder.Id));
-            References.Add(new Reference("localhost:9000", "/", new Vector2D(1, 0), "Rayman", image1.Id));
-            References.Add(new Reference("localhost:9000", "/", new Vector2D(0, -1), "Video", childFolder.Id));
-            References.Add(new Reference("localhost:9000", "/", new Vector2D(-1, 0), "Folder", childFolder.Id));
+            References.Add(new Reference("localhost:51364", "/", new Vector2D(0, 1), "Contacts", childFolder.Id));
+            References.Add(new Reference("localhost:51364", "/", new Vector2D(1, 0), "Rayman", image1.Id));
+            References.Add(new Reference("localhost:51364", "/", new Vector2D(0, -1), "Video", childFolder.Id));
+            References.Add(new Reference("localhost:51364", "/", new Vector2D(-1, 0), "Folder", childFolder.Id));
 
-            References.Add(new Reference("localhost:9000", "/contacts/", new Vector2D(-1, 0), "Charlotte", childFolder.Id));
-            References.Add(new Reference("localhost:9000", "/contacts/", new Vector2D(0, 1), "Vanessa", childFolder.Id));
-            References.Add(new Reference("localhost:9000", "/contacts/", new Vector2D(1, 0), "Pom", childFolder.Id));
+            References.Add(new Reference("localhost:51364", "/contacts/", new Vector2D(-1, 0), "Charlotte", childFolder.Id));
+            References.Add(new Reference("localhost:51364", "/contacts/", new Vector2D(0, 1), "Vanessa", childFolder.Id));
+            References.Add(new Reference("localhost:51364", "/contacts/", new Vector2D(1, 0), "Pom", childFolder.Id));
         }
 
         [HttpPost("references")]

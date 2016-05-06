@@ -2,12 +2,14 @@
 
 (function ($) {
 
-    $.extend(grid, {
+    $.extend(grid,
+    {
         settings: {
             // DOM
             $html: $('html'),
             $body: $('body'),            
-            $canvas: $('canvas')
+            $canvas: $('canvas'),
+            api: $('canvas').data('grid')
         }
     });
 

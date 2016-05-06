@@ -1,15 +1,15 @@
-﻿using Microsoft.Owin;
-using Owin;
+﻿using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Http;
 
-namespace Client
+namespace Server
 {
     public static class OwinMiddlewareExtensions
     {
-        public static void UseGrid(this IAppBuilder app)
+        public static void UseGrid(this IApplicationBuilder app)
         {
             app.Use((context, next) =>
             {
-                if(IsGridRequest(context))
+                if (IsGridRequest(context))
                 {
                     context.Request.Path = new PathString("/_static/index.html");
                 }
@@ -18,9 +18,9 @@ namespace Client
             });
         }
 
-        private static bool IsGridRequest(IOwinContext context)
+        private static bool IsGridRequest(HttpContext context)
         {
-            return !context.Request.Path.Value.StartsWith("/_static/");
+            return !context.Request.Path.Value.StartsWith("/_");
         }
     }
 }

@@ -78,11 +78,12 @@
 		    cursor: pointer;
 		}
     </style>
+    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script src="/_static/scripts/plugins/quo.js"></script>
+    <!--<script src="/_static/scripts/plugins/quo.js"></script>-->
 </head>
 <body>
-    <canvas data-grid="/_api/"></canvas>
+    <canvas id="grid" data-grid="/_api/"></canvas>
 
     <footer>
         <button id="home-button" class="home">
@@ -93,7 +94,7 @@
         </button>
     </footer>
 
-    <script src="/_static/scripts/plugins/pubsub.js"></script>
+    <!--<script src="/_static/scripts/plugins/pubsub.js"></script>
     <script src="/_static/scripts/plugins/modal.js"></script>
 
     <script src="/_static/scripts/modules/settings.js"></script>
@@ -105,6 +106,122 @@
 
     <script src="/_static/scripts/modules/events.js"></script>
 
-    <script src="/_static/scripts/init.js"></script>
+    <script src="/_static/scripts/init.js"></script>-->
+    <script type="text/javascript">
+        var canvas, stage;
+
+        var queue;
+
+        var mouseTarget;	// the display object currently under the mouse, or being dragged
+        var dragStarted;	// indicates whether we are currently in a drag operation
+        var offset = new createjs.Point();
+        var update = true;
+
+        var dragContainer = new createjs.Container();
+
+        function init() {
+            // create stage and point it to the canvas:
+            canvas = document.getElementById("grid");
+            stage = new createjs.Stage(canvas);
+
+            // enable touch interactions if supported on the current device:
+            createjs.Touch.enable(stage);
+
+            // enabled mouse over / out events
+            stage.enableMouseOver(10);
+            stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+
+            var payload = {
+                world: '*',
+                layer: '/',
+                position: {
+                    x: 0,
+                    y: 0
+                }
+            }
+
+            $.ajax({
+                method: 'POST',
+                url: "/_api/world/references/",
+                data: payload
+            }).done(function (data) {
+                handleData(data);
+            });
+
+            createjs.Ticker.addEventListener("tick", tick);
+
+            stage.addChild(dragContainer);
+            stage.addEventListener("stagemousedown", startDrag);
+            stage.addEventListener("stagemouseup", stopDrag);
+        }
+
+        function startDrag(event) {
+            console.log('startDrag');
+            offset.x = stage.mouseX - dragContainer.x;
+            offset.y = stage.mouseY - dragContainer.y;
+            stage.addEventListener("stagemousemove", doDrag);
+
+            update = true;
+        }
+
+        function doDrag(event) {
+            console.log('doDrag');
+            dragContainer.x = event.stageX - offset.x;
+            dragContainer.y = event.stageY - offset.y;
+
+            update = true;
+        }
+
+        function stopDrag(event) {
+            stage.removeEventListener("stagemousemove", doDrag);
+
+            update = true;
+        }
+
+        function handleData(data) {
+            console.log(data);
+
+            data.forEach(function (item) {
+                var itemContainer = new createjs.Container();
+
+                // Dimensions
+                itemContainer.width = 40;
+                itemContainer.height = 40;
+
+                // Center
+                itemContainer.regX = itemContainer.width / 2;
+                itemContainer.regY = itemContainer.height / 2;
+
+                // Position
+                itemContainer.x = item.position.x * 50;
+                itemContainer.y = item.position.y * 50;
+
+                var shape = new createjs.Shape();
+                shape.graphics.beginFill("red").drawCircle(0, 0, 20);
+                shape.x = 20;
+                shape.y = 20;
+
+                itemContainer.addChild(shape);
+
+                dragContainer.addChild(itemContainer);
+            });
+
+            update = true;
+        }
+
+        function stop() {
+            createjs.Ticker.removeEventListener("tick", tick);
+        }
+
+        function tick(event) {
+            // this set makes it so the stage only re-renders when an event handler indicates a change has happened.
+            if (update) {
+                update = false; // only update once
+                stage.update(event);
+            }
+        }
+
+        init();
+    </script>
 </body>
 </html>

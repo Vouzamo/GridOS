@@ -12,6 +12,8 @@ namespace Server.Controllers
         private IList<Reference> References { get; }
         private IList<Item> Items { get; }
 
+        private Item BackToParentItem { get; }
+
         public WorldController()
         {
             // Items
@@ -27,28 +29,28 @@ namespace Server.Controllers
             video1.Values.Add("width", "560");
             video1.Values.Add("height", "315");
 
-            var backToParent = new Item(new BackToParentItemType());
-            backToParent.Id = Guid.Parse("e06af59e-2a85-4856-a4db-22594862b1d8");
+            BackToParentItem = new Item(new BackToParentItemType());
+            BackToParentItem.Id = Guid.Parse("e06af59e-2a85-4856-a4db-22594862b1d8");
 
             var childFolder = new Item(new FolderItemType());
             childFolder.Id = Guid.Parse("257c7db9-8d35-4a1a-a0b5-3755f68b8eb1");
 
             Items.Add(image1);
             Items.Add(video1);
-            Items.Add(backToParent);
+            Items.Add(BackToParentItem);
             Items.Add(childFolder);
 
             // References
             References = new List<Reference>();
 
-            References.Add(new Reference("*", "/", new Vector2D(0, 1), "Contacts", childFolder.Id));
-            References.Add(new Reference("*", "/", new Vector2D(1, 0), "Rayman", image1.Id));
-            References.Add(new Reference("*", "/", new Vector2D(0, -1), "Ronnie O'Sullivan", video1.Id));
-            References.Add(new Reference("*", "/", new Vector2D(-1, 0), "Empty Folder", childFolder.Id));
+            References.Add(new Reference("*", "/", new Vector2D(0, 1), "Contacts", childFolder));
+            References.Add(new Reference("*", "/", new Vector2D(1, 0), "Rayman", image1));
+            References.Add(new Reference("*", "/", new Vector2D(0, -1), "Ronnie O'Sullivan", video1));
+            References.Add(new Reference("*", "/", new Vector2D(-1, 0), "Empty Folder", childFolder));
 
-            References.Add(new Reference("*", "/contacts/", new Vector2D(-1, 0), "Charlotte", childFolder.Id));
-            References.Add(new Reference("*", "/contacts/", new Vector2D(0, 1), "Vanessa", childFolder.Id));
-            References.Add(new Reference("*", "/contacts/", new Vector2D(1, 0), "Pom", childFolder.Id));
+            References.Add(new Reference("*", "/contacts/", new Vector2D(-1, 0), "Charlotte", childFolder));
+            References.Add(new Reference("*", "/contacts/", new Vector2D(0, 1), "Vanessa", childFolder));
+            References.Add(new Reference("*", "/contacts/", new Vector2D(1, 0), "Pom", childFolder));
         }
 
         [HttpPost("references")]
@@ -58,7 +60,7 @@ namespace Server.Controllers
 
             if (layer != "/")
             {
-                layerData.Add(new Reference(world, layer, Vector2D.Zero, "Back", Guid.Parse("e06af59e-2a85-4856-a4db-22594862b1d8")));
+                layerData.Add(new Reference(world, layer, Vector2D.Zero, "Back", BackToParentItem));
             }
 
             var viewport = Rectangle.FromCentre(position.X, position.Y, 32, 18);
@@ -69,7 +71,9 @@ namespace Server.Controllers
         [HttpPost("item")]
         public IAction WorldItem([FromBody] Reference reference)
         {
-            var item = Items.SingleOrDefault(x => x.Id == reference.Item);
+            var itemId = reference?.Item;
+
+            var item = Items.SingleOrDefault(x => x.Id == itemId);
 
             return item?.Type.Invoke(reference, item.Values);
         }

@@ -6,7 +6,7 @@ namespace Server.Models
     {
         private const string ImageUrlFieldName = "image_url";
 
-        public ExternalImageItemType() : base("External Image")
+        public ExternalImageItemType() : base("External Image", "http://icons.iconarchive.com/icons/tristan-edwards/sevenesque/1024/Preview-icon.png")
         {
             Fields.Add(new TextField(ImageUrlFieldName));
         }

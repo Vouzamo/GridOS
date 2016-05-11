@@ -110,6 +110,15 @@
                     success: function(data) {
                         self.data.items = data;
 
+                        self.data.items.forEach(function(item) {
+                            item.iconImg = new Image();
+                            item.iconImg.src = item.icon;
+                            item.iconImg.onload = function() {
+                                item.icon = '';
+                                grid.drawing.draw();
+                            }
+                        });
+
                         grid.drawing.draw();
                     }
                 });

@@ -8,7 +8,7 @@ namespace Server.Models
         private const string WidthFieldName = "width";
         private const string HeightFieldName = "height";
 
-        public ExternalVideoItemType() : base("External Video")
+        public ExternalVideoItemType() : base("External Video", "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png")
         {
             Fields.Add(new TextField(VideoIdFieldName));
             Fields.Add(new IntegerField(WidthFieldName));

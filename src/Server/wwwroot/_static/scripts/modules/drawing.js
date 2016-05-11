@@ -144,8 +144,25 @@
 
                 var screenPosition = viewport.toScreenPosition(item.position);
 
-                self.drawCircle(screenPosition, 1);
+                //self.drawCircle(screenPosition, 1);
+                if (item.icon == '') {
+                    self.context.save();
 
+                    self.context.shadowBlur = 20;
+                    self.context.drawImage(item.iconImg,
+                        0,
+                        0,
+                        item.iconImg.width,
+                        item.iconImg.height,
+                        screenPosition.x - 15,
+                        screenPosition.y - 15,
+                        30,
+                        30);
+
+                    self.context.restore();
+                }
+
+                // Label
                 self.context.save();
 
                 self.context.shadowBlur = 20;

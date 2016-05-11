@@ -6,12 +6,14 @@ namespace Server.Models
     {
         public Guid Id { get; protected set; }
         public string Name { get; protected set; }
+        public string Icon { get; protected set; }
         public FieldCollection Fields { get; protected set; }
 
-        protected ItemType(string name)
+        protected ItemType(string name, string icon)
         {
             Id = Guid.NewGuid();
             Name = name;
+            Icon = icon;
             Fields = new FieldCollection();
         }
 

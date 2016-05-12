@@ -5,6 +5,7 @@
     grid.canvas = null;
     grid.stage = null;
     grid.container = null;
+    grid.points = null;
     grid.spacing = 100;
     grid.offset = {
         x: 0,
@@ -25,20 +26,18 @@
     };
 
     grid.createContainer = function () {
+        // Points
+        var points = new createjs.Container();
+        points.alpha = 0.1;
+
+        grid.stage.addChild(points);
+        grid.points = points;
+
+        // Main container
         var container = new createjs.Container();
 
         container.x = grid.stage.canvas.width / 2;
         container.y = grid.stage.canvas.height / 2;
-
-        //var shape = new createjs.Shape();
-        //shape.graphics.beginFill("#fff").drawCircle(0, 0, 20);
-        //shape.addEventListener("mousedown", function (event) {
-        //    grid.canDrag = false;
-        //});
-        //shape.addEventListener("click", function (event) {
-        //    alert('click');
-        //});
-        //container.addChild(shape);
 
         grid.stage.addChild(container);
         grid.container = container;
@@ -112,6 +111,31 @@
             x: width / 2,
             y: height / 2
         };
+
+        // Points
+        grid.points.removeAllChildren();
+
+        var overlap = {
+            x: (Math.ceil(grid.offset.x / grid.spacing) * grid.spacing) - grid.offset.x,
+            y: (Math.ceil(grid.offset.y / grid.spacing) * grid.spacing) - grid.offset.y
+        };
+
+        var bounds = {
+            x: 0 - overlap.x,
+            y: 0 - overlap.y,
+            width: grid.stage.canvas.width + (2 * overlap.x),
+            height: grid.stage.canvas.height + (2 * overlap.y)
+        };
+
+        for (var x = bounds.x; x <= bounds.width; x += grid.spacing) {
+            for (var y = bounds.y; y <= bounds.height; y += grid.spacing) {
+                var point = new createjs.Shape();
+                point.x = x;
+                point.y = y;
+                point.graphics.beginFill("#000").drawCircle(0, 0, 5);
+                grid.points.addChild(point);
+            }
+        }
     };
 
     grid.fetchData = function (x, y) {

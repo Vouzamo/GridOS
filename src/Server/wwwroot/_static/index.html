@@ -86,7 +86,7 @@
     <!--<script src="/_static/scripts/plugins/quo.js"></script>-->
 </head>
 <body>
-    <canvas id="grid" data-grid="/_api/"></canvas>
+    <canvas id="main" data-api="/_api/"></canvas>
 
     <footer>
         <button id="home-button" class="home">
@@ -113,10 +113,10 @@
 
     <script type="text/javascript" src="/_static/scripts/grid.js"></script>
     <script type="text/javascript">
-        grid.init("grid");
+        grid.init("main");
 
         $('#home-button').click(function () {
-            createjs.Tween.get(grid.container).to({ x: grid.stage.canvas.width / 2, y: grid.stage.canvas.height / 2 }, 1000, createjs.Ease.quadInOut);
+            grid.animateTo(grid.container, grid.stage.canvas.width / 2, grid.stage.canvas.height / 2);
         });
     </script>
 </body>

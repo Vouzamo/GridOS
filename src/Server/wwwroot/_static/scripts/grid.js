@@ -184,11 +184,66 @@
             itemContainer.y = item.position.y * grid.spacing;
             itemContainer.cursor = "pointer";
 
+            var longPress = false;
+
+            var offset = new createjs.Point();
+            var dragging = function (event) {
+                itemContainer.x = event.stageX - offset.x;
+                itemContainer.y = event.stageY - offset.y;
+            }
+
+            var endMove = function (event) {
+                clearTimeout(grid.longPressTimeout);
+
+                if (!longPress) {
+                    grid.invoke(item);
+                } else {
+                    var x = itemContainer.x;
+                    var y = itemContainer.y;
+
+                    function savePosition(item, x, y) {
+                        item.x = x;
+                        item.y = y;
+
+                        console.log("moved " + item.name + " to (" + x + "," + y + ")");
+
+                        // save to server
+                    }
+
+                    if (x % grid.spacing !== 0 || y % grid.spacing !== 0) {
+                        var refX = Math.round(x / grid.spacing);
+                        var refY = Math.round(y / grid.spacing);
+
+                        grid.animateTo(itemContainer,
+                            (refX * grid.spacing),
+                            (refY * grid.spacing)
+                        );
+
+                        savePosition(item, refX, refY);
+                    } else {
+                        savePosition(item, (x / grid.spacing), (y / grid.spacing));
+                    }
+                }
+
+                grid.stage.removeEventListener("stagemouseup", endMove);
+                grid.stage.removeEventListener("stagemousemove", dragging);
+
+                longPress = false;
+            };
+
             itemContainer.addEventListener("mousedown", function (event) {
                 grid.canDrag = false;
-            });
-            itemContainer.addEventListener("click", function (event) {
-                grid.invoke(item);
+                grid.stage.addEventListener("stagemouseup", endMove);
+
+                createjs.Tween.get(itemContainer, { override: true }).to({ scaleX: 1.5, scaleY: 1.5 }, 500, createjs.Ease.quadOut).to({ scaleX: 1, scaleY: 1 }, 250, createjs.Ease.quadOut);
+
+                grid.longPressTimeout = setTimeout(function() {
+                    longPress = true;
+
+                    offset.x = grid.stage.mouseX - itemContainer.x;
+                    offset.y = grid.stage.mouseY - itemContainer.y;
+                    grid.stage.addEventListener("stagemousemove", dragging);
+                }, 500);
             });
 
             grid.container.addChild(itemContainer);

@@ -132,17 +132,27 @@
         });
 
         var heartbeat = function () {
-            var beatIn = function () {
+            var beatA1 = function () {
                 grid.activeLayer.updateSpacing(50);
-                setTimeout(beatOut, 1000);
+                setTimeout(beatA2, 500);
             }
 
-            var beatOut = function () {
+            var beatA2 = function () {
                 grid.activeLayer.updateSpacing(100);
-                setTimeout(beatIn, 1000);
+                setTimeout(beatB1, 500);
             }
 
-            beatOut();
+            var beatB1 = function () {
+                grid.activeLayer.updateSpacing(50);
+                setTimeout(beatB2, 500);
+            }
+
+            var beatB2 = function () {
+                grid.activeLayer.updateSpacing(100);
+                setTimeout(beatA1, 1000);
+            }
+
+            beatA1();
         }
     </script>
 </body>

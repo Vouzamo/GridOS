@@ -4,7 +4,7 @@ var vouzamo = vouzamo || {};
 function Layer(grid, layerId) {
     this.grid = grid;
     this.layerId = layerId;
-    this.spacing = 50;
+    this.spacing = 100;
     this.dragOffset = new createjs.Point();
     this.container = {};
     this.items = [];

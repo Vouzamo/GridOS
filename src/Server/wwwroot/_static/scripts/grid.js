@@ -64,7 +64,7 @@ Grid.prototype = {
 
         this.resize();
 
-        this.loadLayer("/");
+        this.loadLayer(window.location.pathname);
     },
 
     loadLayer: function(layerId) {

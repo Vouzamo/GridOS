@@ -86,13 +86,19 @@
     <!--<script src="/_static/scripts/plugins/quo.js"></script>-->
 </head>
 <body>
-    <canvas id="main" data-api="/_api/"></canvas>
+    <canvas id="main"></canvas>
 
     <footer>
-        <button id="home-button" class="home">
+        <button id="home-button">
             <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x fa-semi-transparent"></i>
                 <i class="fa fa-arrows fa-stack-1x fa-inverse"></i>
+            </span>
+        </button>
+        <button id="heartbeat-button">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-semi-transparent"></i>
+                <i class="fa fa-heartbeat fa-stack-1x fa-inverse"></i>
             </span>
         </button>
     </footer>
@@ -111,13 +117,33 @@
 
     <script src="/_static/scripts/init.js"></script>-->
 
+    <script type="text/javascript" src="/_static/scripts/item.js"></script>
+    <script type="text/javascript" src="/_static/scripts/layer.js"></script>
     <script type="text/javascript" src="/_static/scripts/grid.js"></script>
     <script type="text/javascript">
-        grid.init("main");
+        grid = new Grid("/_api/", "main");
 
         $('#home-button').click(function () {
-            grid.animateTo(grid.container, grid.stage.canvas.width / 2, grid.stage.canvas.height / 2);
+            grid.activeLayer.center(true);
         });
+
+        $('#heartbeat-button').click(function () {
+            heartbeat(true);
+        });
+
+        var heartbeat = function () {
+            var beatIn = function () {
+                grid.activeLayer.updateSpacing(50);
+                setTimeout(beatOut, 1000);
+            }
+
+            var beatOut = function () {
+                grid.activeLayer.updateSpacing(100);
+                setTimeout(beatIn, 1000);
+            }
+
+            beatOut();
+        }
     </script>
 </body>
 </html>

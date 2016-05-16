@@ -5,6 +5,7 @@ function Item(layer, settings) {
     this.layer = layer;
     this.isDragging = false;
     this.dragOffset = new createjs.Point();
+    this.dragTarget = null;
     this.container = {}
     this.item = settings;
 
@@ -25,7 +26,7 @@ Item.prototype = {
         var self = this;
         var stage = self.layer.grid.stage;
         var mouseDown, mouseHeld = false;
-        var mouseTimer
+        var mouseTimer;
 
         self.container.addEventListener("mousedown", function (event) {
             self.layer.canDrag = false;
@@ -39,6 +40,7 @@ Item.prototype = {
                 // Start Drag
                 if (Math.abs(self.dragOffset.x - stage.mouseX) <= 5 && Math.abs(self.dragOffset.y - stage.mouseY) <= 5) {
                     self.isDragging = true;
+                    self.dragTarget = null;
                     self.dragOffset.x = stage.mouseX - self.container.x;
                     self.dragOffset.y = stage.mouseY - self.container.y;
                     createjs.Tween.get(self.container, { override: true }).to({ scaleX: 2, scaleY: 2 }, 500, createjs.Ease.elasticOut);
@@ -51,6 +53,23 @@ Item.prototype = {
             if (self.isDragging) {
                 self.container.x = event.stageX - self.dragOffset.x;
                 self.container.y = event.stageY - self.dragOffset.y;
+
+                var snappedX = Math.round(self.container.x / self.layer.spacing);
+                var snappedY = Math.round(self.container.y / self.layer.spacing);
+
+                var dragTarget = self.layer.placeholdersMatrix.get(snappedX, snappedY);
+
+                if (self.dragTarget !== dragTarget) {
+                    if (self.dragTarget !== null) {
+                        createjs.Tween.get(self.dragTarget, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
+                    }
+
+                    if (dragTarget !== null && self.layer.matrix.isEmpty(snappedX, snappedY)) {
+                        createjs.Tween.get(dragTarget, { override: true }).to({ scaleX: 3, scaleY: 3, alpha: .3 }, 500, createjs.Ease.elasticOut);
+                    }
+
+                    self.dragTarget = dragTarget;
+                }
             }
         }.bind(self));
 
@@ -80,12 +99,23 @@ Item.prototype = {
         var snappedX = Math.round(this.container.x / this.layer.spacing);
         var snappedY = Math.round(this.container.y / this.layer.spacing);
 
-        if (true) {
+        var originX = this.item.position.x;
+        var originY = this.item.position.y;
+
+        var canMove = this.layer.matrix.isEmpty(snappedX, snappedY);
+
+        if (canMove) {
             createjs.Tween.get(this.container, { override: false }).to({ x: snappedX * this.layer.spacing, y: snappedY * this.layer.spacing }, 500, createjs.Ease.elasticOut);
             // Save new position
+            this.layer.matrix.move(originX, originY, snappedX, snappedY);
             this.item.position.x = snappedX;
             this.item.position.y = snappedY;
+        } else {
+            // Revert
+            createjs.Tween.get(this.container, { override: false }).to({ x: originX * this.layer.spacing, y: originY * this.layer.spacing }, 500, createjs.Ease.elasticOut);
         }
+
+        createjs.Tween.get(this.dragTarget, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
     },
 
     invoke: function () {

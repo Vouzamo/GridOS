@@ -124,31 +124,31 @@
         grid = new Grid("/_api/", "main");
 
         $('#home-button').click(function () {
-            grid.activeLayer.center(true);
+            grid.activeLayer.center(1000);
         });
 
         $('#heartbeat-button').click(function () {
-            heartbeat(true);
+            heartbeat();
         });
 
         var heartbeat = function () {
             var beatA1 = function () {
-                grid.activeLayer.updateSpacing(50);
+                grid.activeLayer.updateSpacing(50, 500);
                 setTimeout(beatA2, 500);
             }
 
             var beatA2 = function () {
-                grid.activeLayer.updateSpacing(100);
+                grid.activeLayer.updateSpacing(100, 500);
                 setTimeout(beatB1, 500);
             }
 
             var beatB1 = function () {
-                grid.activeLayer.updateSpacing(50);
+                grid.activeLayer.updateSpacing(50, 500);
                 setTimeout(beatB2, 500);
             }
 
             var beatB2 = function () {
-                grid.activeLayer.updateSpacing(100);
+                grid.activeLayer.updateSpacing(100, 500);
                 setTimeout(beatA1, 1000);
             }
 

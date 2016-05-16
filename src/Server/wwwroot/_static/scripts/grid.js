@@ -21,36 +21,17 @@ Grid.prototype = {
     },
 
     setEventListeners: function () {
+        var self = this;
+
         // Resize / Orientation Change
         window.addEventListener("resize", function () {
-            this.resize();
-        }.bind(this));
+            self.resize();
+        }.bind(self));
 
         // Stage Update / Tick
         createjs.Ticker.addEventListener("tick", function (event) {
-            this.stage.update(event);
-        }.bind(this));
-
-        // Start Drag
-        this.stage.addEventListener("stagemousedown", function (event) {
-            this.stage.isDragging = true;
-
-            this.activeLayer.dragOffset.x = this.stage.mouseX - this.activeLayer.container.x;
-            this.activeLayer.dragOffset.y = this.stage.mouseY - this.activeLayer.container.y;
-        }.bind(this));
-
-        // Dragging
-        this.stage.addEventListener("stagemousemove", function (event) {
-            if (this.stage.isDragging) {
-                this.activeLayer.container.x = event.stageX - this.activeLayer.dragOffset.x;
-                this.activeLayer.container.y = event.stageY - this.activeLayer.dragOffset.y;
-            }
-        }.bind(this));
-
-        // End Drag
-        this.stage.addEventListener("stagemouseup", function (event) {
-            this.stage.isDragging = false;
-        }.bind(this));
+            self.stage.update(event);
+        }.bind(self));
     },
 
     createStage(canvasId) {

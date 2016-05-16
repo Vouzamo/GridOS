@@ -3,6 +3,8 @@ var vouzamo = vouzamo || {};
 
 function Item(layer, settings) {
     this.layer = layer;
+    this.isDragging = false;
+    this.dragOffset = new createjs.Point();
     this.container = {}
     this.item = settings;
 
@@ -12,16 +14,78 @@ function Item(layer, settings) {
 Item.prototype = {
     constructor: Item,
 
-    replace: function (animate) {
+    replace: function (duration) {
         var x = this.item.position.x * this.layer.spacing;
         var y = this.item.position.y * this.layer.spacing;
 
-        var duration = animate ? 500 : 0;
         createjs.Tween.get(this.container, { override: true }).to({ x: x, y: y }, duration, createjs.Ease.quadInOut);
     },
 
-    setEventListeners: function() {
-        this.container.addEventListener("click", this.invoke.bind(this));
+    setEventListeners: function () {
+        var self = this;
+        var stage = self.layer.grid.stage;
+        var mouseDown, mouseHeld = false;
+        var mouseTimer
+
+        self.container.addEventListener("mousedown", function (event) {
+            self.layer.canDrag = false;
+            self.dragOffset.x = stage.mouseX;
+            self.dragOffset.y = stage.mouseY;
+            mouseDown = true;
+            mouseHeld = false;
+            clearTimeout(mouseTimer);
+            mouseTimer = setTimeout(function () {
+                mouseHeld = true;
+                // Start Drag
+                if (Math.abs(self.dragOffset.x - stage.mouseX) <= 5 && Math.abs(self.dragOffset.y - stage.mouseY) <= 5) {
+                    self.isDragging = true;
+                    self.dragOffset.x = stage.mouseX - self.container.x;
+                    self.dragOffset.y = stage.mouseY - self.container.y;
+                    createjs.Tween.get(self.container, { override: true }).to({ scaleX: 2, scaleY: 2 }, 500, createjs.Ease.elasticOut);
+                }
+            }.bind(self), 400)
+        }.bind(self));
+
+        // Dragging
+        stage.addEventListener("stagemousemove", function (event) {
+            if (self.isDragging) {
+                self.container.x = event.stageX - self.dragOffset.x;
+                self.container.y = event.stageY - self.dragOffset.y;
+            }
+        }.bind(self));
+
+        stage.addEventListener("stagemouseup", function (e) {
+            if(mouseDown && mouseHeld) {
+                mouseDown = false;
+                if (self.isDragging) {
+                    // End Drag
+                    createjs.Tween.get(self.container, { override: true }).to({ scaleX: 1, scaleY: 1 }, 500, createjs.Ease.elasticOut);
+                    self.snapToGrid();
+                }
+                self.isDragging = false;
+                e.preventDefault();
+                return;
+            }
+
+            if(mouseDown) {
+                clearTimeout(mouseTimer);
+                mouseDown = false;
+                // Click
+                self.invoke();
+            }
+        }.bind(self));
+    },
+
+    snapToGrid: function () {
+        var snappedX = Math.round(this.container.x / this.layer.spacing);
+        var snappedY = Math.round(this.container.y / this.layer.spacing);
+
+        if (true) {
+            createjs.Tween.get(this.container, { override: false }).to({ x: snappedX * this.layer.spacing, y: snappedY * this.layer.spacing }, 500, createjs.Ease.elasticOut);
+            // Save new position
+            this.item.position.x = snappedX;
+            this.item.position.y = snappedY;
+        }
     },
 
     invoke: function () {
@@ -46,11 +110,16 @@ Item.prototype = {
 
         this.layer.container.addChild(this.container);
 
-        this.replace(false);
+        this.replace();
 
         // icon
         var shape = new createjs.Shape();
         shape.graphics.beginFill("#fff").drawCircle(0, 0, 10);
+
+        var hitArea = new createjs.Shape();
+        hitArea.graphics.beginFill("#000").drawRect(-45, -45, 90, 90);
+        shape.hitArea = hitArea;
+
         this.container.addChild(shape);
 
         // text

@@ -11,13 +11,16 @@ namespace Server.Models
 
         public Guid Item { get; set; }
         public string Icon { get; set; }
+        public bool IsMovable { get; set; }
+        public bool IsEditable { get; set; }
 
         public Reference()
         {
-            
+            IsMovable = true;
+            IsEditable = true;
         }
 
-        public Reference(string world, string layer, Vector2D position, string name, Guid item, string icon)
+        public Reference(string world, string layer, Vector2D position, string name, Guid item, string icon) : this()
         {
             World = world;
             Layer = layer;

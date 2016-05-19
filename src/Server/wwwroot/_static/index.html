@@ -118,19 +118,12 @@
     <script src="/_static/scripts/init.js"></script>-->
 
     <script type="text/javascript" src="/_static/scripts/matrix.js"></script>
+    <script type="text/javascript" src="/_static/scripts/placeholder.js"></script>
     <script type="text/javascript" src="/_static/scripts/item.js"></script>
     <script type="text/javascript" src="/_static/scripts/layer.js"></script>
     <script type="text/javascript" src="/_static/scripts/grid.js"></script>
     <script type="text/javascript">
-        grid = new Grid("/_api/", "main");
-
-        $('#home-button').click(function () {
-            grid.activeLayer.center(1000);
-        });
-
-        $('#heartbeat-button').click(function () {
-            heartbeat();
-        });
+        var grid = new Grid("/_api/", "main");
 
         var heartbeat = function () {
             var beatA1 = function () {
@@ -155,6 +148,14 @@
 
             beatA1();
         }
+
+        $('#home-button').click(function () {
+            grid.activeLayer.center(1000);
+        });
+
+        $('#heartbeat-button').click(function () {
+            heartbeat();
+        });
     </script>
 </body>
 </html>

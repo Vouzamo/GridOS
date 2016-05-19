@@ -34,14 +34,14 @@ Matrix2D.prototype = {
         this.updateBounds(x, y);
     },
 
-    resetBound() {
+    resetBound: function() {
         this.minX = 0;
         this.maxX = 0;
         this.minY = 0;
         this.maxY = 0;
     },
 
-    updateBounds(x, y) {
+    updateBounds: function(x, y) {
         this.minX = Math.min(this.minX, x);
         this.maxX = Math.max(this.maxX, x);
         this.minY = Math.min(this.minY, y);
@@ -99,7 +99,6 @@ Matrix2D.prototype = {
 
     isEmpty: function(x, y) {
         var item = this.get(x, y);
-        console.log(item);
 
         return item === null || item === undefined;
     },

@@ -25,7 +25,7 @@ Layer.prototype = {
         createjs.Tween.get(this.container, { override: true }).to({ x: x, y: y }, duration, createjs.Ease.quadInOut);
     },
 
-    updateSpacing(spacing, duration) {
+    updateSpacing: function(spacing, duration) {
         this.spacing = spacing;
 
         var items = this.matrix.getAll();
@@ -73,18 +73,13 @@ Layer.prototype = {
         this.container.addChild(this.placeholders);
     },
 
-    addPlaceholderItems: function() {
+    addPlaceholderItems: function () {
+        var self = this;
+
         for (var x = -7; x <= 7; x++) {
             for (var y = -4; y <= 4; y++) {
-                if (this.matrix.isEmpty(x, y)) {
-                    var placeholder = new createjs.Shape();
-                    placeholder.x = x * this.spacing;
-                    placeholder.y = y * this.spacing;
-                    placeholder.alpha = 0.1;
-                    placeholder.graphics.beginFill("#000").drawCircle(0, 0, 5);
-
-                    this.placeholders.addChild(placeholder);
-                    this.placeholdersMatrix.set(x, y, placeholder);
+                if (self.matrix.isEmpty(x, y)) {
+                    self.placeholdersMatrix.set(x, y, new Placeholder(self, { x: x * self.spacing, y: y * self.spacing }));
                 }
             }
         }

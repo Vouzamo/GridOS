@@ -35,22 +35,25 @@ Item.prototype = {
             mouseDown = true;
             mouseHeld = false;
             clearTimeout(mouseTimer);
+
             mouseTimer = setTimeout(function () {
                 mouseHeld = true;
                 // Start Drag
-                if (Math.abs(self.dragOffset.x - stage.mouseX) <= 5 && Math.abs(self.dragOffset.y - stage.mouseY) <= 5) {
-                    self.isDragging = true;
-                    self.dragTarget = null;
-                    self.dragOffset.x = stage.mouseX - self.container.x;
-                    self.dragOffset.y = stage.mouseY - self.container.y;
-                    createjs.Tween.get(self.container, { override: true }).to({ scaleX: 2, scaleY: 2 }, 500, createjs.Ease.elasticOut);
+                if (self.item.isMovable) {
+                    if (Math.abs(self.dragOffset.x - stage.mouseX) <= 5 && Math.abs(self.dragOffset.y - stage.mouseY) <= 5) {
+                        self.isDragging = true;
+                        self.dragTarget = null;
+                        self.dragOffset.x = stage.mouseX - self.container.x;
+                        self.dragOffset.y = stage.mouseY - self.container.y;
+                        createjs.Tween.get(self.container, { override: true }).to({ alpha: 0.5, scaleX: 1.5, scaleY: 1.5 }, 500, createjs.Ease.elasticOut);
+                    }
                 }
-            }.bind(self), 400)
+            }.bind(self), 400);
         }.bind(self));
 
         // Dragging
         stage.addEventListener("stagemousemove", function (event) {
-            if (self.isDragging) {
+            if (self.item.isMovable && self.isDragging) {
                 self.container.x = event.stageX - self.dragOffset.x;
                 self.container.y = event.stageY - self.dragOffset.y;
 
@@ -61,11 +64,11 @@ Item.prototype = {
 
                 if (self.dragTarget !== dragTarget) {
                     if (self.dragTarget !== null) {
-                        createjs.Tween.get(self.dragTarget, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
+                        createjs.Tween.get(self.dragTarget.container, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
                     }
 
                     if (dragTarget !== null && self.layer.matrix.isEmpty(snappedX, snappedY)) {
-                        createjs.Tween.get(dragTarget, { override: true }).to({ scaleX: 3, scaleY: 3, alpha: .3 }, 500, createjs.Ease.elasticOut);
+                        createjs.Tween.get(dragTarget.container, { override: true }).to({ scaleX: 1.5, scaleY: 1.5, alpha: .3 }, 500, createjs.Ease.elasticOut);
                     }
 
                     self.dragTarget = dragTarget;
@@ -78,7 +81,7 @@ Item.prototype = {
                 mouseDown = false;
                 if (self.isDragging) {
                     // End Drag
-                    createjs.Tween.get(self.container, { override: true }).to({ scaleX: 1, scaleY: 1 }, 500, createjs.Ease.elasticOut);
+                    createjs.Tween.get(self.container, { override: true }).to({ alpha: 1, scaleX: 1, scaleY: 1 }, 500, createjs.Ease.elasticOut);
                     self.snapToGrid();
                 }
                 self.isDragging = false;
@@ -102,7 +105,7 @@ Item.prototype = {
         var originX = this.item.position.x;
         var originY = this.item.position.y;
 
-        var canMove = this.layer.matrix.isEmpty(snappedX, snappedY);
+        var canMove = this.layer.matrix.isEmpty(snappedX, snappedY) && this.item.isMovable;
 
         if (canMove) {
             createjs.Tween.get(this.container, { override: false }).to({ x: snappedX * this.layer.spacing, y: snappedY * this.layer.spacing }, 500, createjs.Ease.elasticOut);
@@ -115,7 +118,9 @@ Item.prototype = {
             createjs.Tween.get(this.container, { override: false }).to({ x: originX * this.layer.spacing, y: originY * this.layer.spacing }, 500, createjs.Ease.elasticOut);
         }
 
-        createjs.Tween.get(this.dragTarget, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
+        if (this.dragTarget !== null) {
+            createjs.Tween.get(this.dragTarget.container, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
+        }
     },
 
     invoke: function () {

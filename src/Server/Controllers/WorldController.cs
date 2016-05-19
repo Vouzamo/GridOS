@@ -58,9 +58,19 @@ namespace Server.Controllers
         {
             var layerData = References.Where(m => (m.World.Equals(world, StringComparison.OrdinalIgnoreCase) || m.World.Equals("*")) && m.Layer.Equals(layer, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            if (layer != "/")
+            if (layer == "/")
             {
-                layerData.Add(new Reference(world, layer, Vector2D.Zero, "Back", BackToParentItem));
+                var home = new Reference(world, layer, Vector2D.Zero, "Home", BackToParentItem);
+                home.IsEditable = false;
+                home.IsMovable = false;
+
+                layerData.Add(home);
+            } else {
+                var backToParent = new Reference(world, layer, Vector2D.Zero, "Back", BackToParentItem);
+                backToParent.IsEditable = false;
+                backToParent.IsMovable = false;
+
+                layerData.Add(backToParent);
             }
 
             var viewport = Rectangle.FromCentre(position.X, position.Y, 32, 18);

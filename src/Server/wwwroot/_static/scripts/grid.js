@@ -34,7 +34,7 @@ Grid.prototype = {
         }.bind(self));
     },
 
-    createStage(canvasId) {
+    createStage: function(canvasId) {
         var canvas = document.getElementById(canvasId);
         var stage = new createjs.Stage(canvas);
 

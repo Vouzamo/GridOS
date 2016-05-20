@@ -24,78 +24,99 @@ Item.prototype = {
 
     setEventListeners: function () {
         var self = this;
-        var stage = self.layer.grid.stage;
-        var mouseDown, mouseHeld = false;
-        var mouseTimer;
 
-        self.container.addEventListener("mousedown", function (event) {
-            self.layer.canDrag = false;
-            self.dragOffset.x = stage.mouseX;
-            self.dragOffset.y = stage.mouseY;
-            mouseDown = true;
-            mouseHeld = false;
-            clearTimeout(mouseTimer);
+        self.container.on("gridclick", function (event) {
+            console.log("grid click " + self.item.name);
+        });
 
-            mouseTimer = setTimeout(function () {
-                mouseHeld = true;
-                // Start Drag
-                if (self.item.isMovable) {
-                    if (Math.abs(self.dragOffset.x - stage.mouseX) <= 5 && Math.abs(self.dragOffset.y - stage.mouseY) <= 5) {
-                        self.isDragging = true;
-                        self.dragTarget = null;
-                        self.dragOffset.x = stage.mouseX - self.container.x;
-                        self.dragOffset.y = stage.mouseY - self.container.y;
-                        createjs.Tween.get(self.container, { override: true }).to({ alpha: 0.5, scaleX: 1.5, scaleY: 1.5 }, 500, createjs.Ease.elasticOut);
-                    }
-                }
-            }.bind(self), 400);
-        }.bind(self));
+        self.container.on("gridhold", function (event) {
+            console.log("grid hold " + self.item.name);
+        });
 
-        // Dragging
-        stage.addEventListener("stagemousemove", function (event) {
-            if (self.item.isMovable && self.isDragging) {
-                self.container.x = event.stageX - self.dragOffset.x;
-                self.container.y = event.stageY - self.dragOffset.y;
+        self.container.on("griddragstart", function (event) {
+            console.log("grid drag start " + self.item.name);
+        });
 
-                var snappedX = Math.round(self.container.x / self.layer.spacing);
-                var snappedY = Math.round(self.container.y / self.layer.spacing);
+        self.container.on("griddragmove", function (event) {
+            console.log("grid drag move " + self.item.name);
+        });
 
-                var dragTarget = self.layer.placeholdersMatrix.get(snappedX, snappedY);
+        self.container.on("griddragfinish", function (event) {
+            console.log("grid drag finish " + self.item.name);
+        });
 
-                if (self.dragTarget !== dragTarget) {
-                    if (self.dragTarget !== null) {
-                        createjs.Tween.get(self.dragTarget.container, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
-                    }
+        //var stage = self.layer.grid;
+        //var mouseDown, mouseHeld = false;
+        //var mouseTimer;
 
-                    if (dragTarget !== null && self.layer.matrix.isEmpty(snappedX, snappedY)) {
-                        createjs.Tween.get(dragTarget.container, { override: true }).to({ scaleX: 1.5, scaleY: 1.5, alpha: .3 }, 500, createjs.Ease.elasticOut);
-                    }
+        //self.container.addEventListener("mousedown", function (event) {
+        //    self.layer.canDrag = false;
+        //    self.dragOffset.x = stage.mouseX;
+        //    self.dragOffset.y = stage.mouseY;
+        //    mouseDown = true;
+        //    mouseHeld = false;
+        //    clearTimeout(mouseTimer);
 
-                    self.dragTarget = dragTarget;
-                }
-            }
-        }.bind(self));
+        //    mouseTimer = setTimeout(function () {
+        //        mouseHeld = true;
+        //        // Start Drag
+        //        if (self.item.isMovable) {
+        //            if (Math.abs(self.dragOffset.x - stage.mouseX) <= 5 && Math.abs(self.dragOffset.y - stage.mouseY) <= 5) {
+        //                self.isDragging = true;
+        //                self.dragTarget = null;
+        //                self.dragOffset.x = stage.mouseX - self.container.x;
+        //                self.dragOffset.y = stage.mouseY - self.container.y;
+        //                createjs.Tween.get(self.container, { override: true }).to({ alpha: 0.5, scaleX: 1.5, scaleY: 1.5 }, 500, createjs.Ease.elasticOut);
+        //            }
+        //        }
+        //    }.bind(self), 400);
+        //}.bind(self));
 
-        stage.addEventListener("stagemouseup", function (e) {
-            if(mouseDown && mouseHeld) {
-                mouseDown = false;
-                if (self.isDragging) {
-                    // End Drag
-                    createjs.Tween.get(self.container, { override: true }).to({ alpha: 1, scaleX: 1, scaleY: 1 }, 500, createjs.Ease.elasticOut);
-                    self.snapToGrid();
-                }
-                self.isDragging = false;
-                e.preventDefault();
-                return;
-            }
+        //// Dragging
+        //stage.addEventListener("stagemousemove", function (event) {
+        //    if (self.item.isMovable && self.isDragging) {
+        //        self.container.x = event.stageX - self.dragOffset.x;
+        //        self.container.y = event.stageY - self.dragOffset.y;
 
-            if(mouseDown) {
-                clearTimeout(mouseTimer);
-                mouseDown = false;
-                // Click
-                self.invoke();
-            }
-        }.bind(self));
+        //        var snappedX = Math.round(self.container.x / self.layer.spacing);
+        //        var snappedY = Math.round(self.container.y / self.layer.spacing);
+
+        //        var dragTarget = self.layer.placeholdersMatrix.get(snappedX, snappedY);
+
+        //        if (self.dragTarget !== dragTarget) {
+        //            if (self.dragTarget !== null) {
+        //                createjs.Tween.get(self.dragTarget.container, { override: true }).to({ scaleX: 1, scaleY: 1, alpha: .1 }, 500, createjs.Ease.elasticOut);
+        //            }
+
+        //            if (dragTarget !== null && self.layer.matrix.isEmpty(snappedX, snappedY)) {
+        //                createjs.Tween.get(dragTarget.container, { override: true }).to({ scaleX: 1.5, scaleY: 1.5, alpha: .3 }, 500, createjs.Ease.elasticOut);
+        //            }
+
+        //            self.dragTarget = dragTarget;
+        //        }
+        //    }
+        //}.bind(self));
+
+        //stage.addEventListener("stagemouseup", function (e) {
+        //    if(mouseDown && mouseHeld) {
+        //        mouseDown = false;
+        //        if (self.isDragging) {
+        //            // End Drag
+        //            createjs.Tween.get(self.container, { override: true }).to({ alpha: 1, scaleX: 1, scaleY: 1 }, 500, createjs.Ease.elasticOut);
+        //            self.snapToGrid();
+        //        }
+        //        self.isDragging = false;
+        //        e.preventDefault();
+        //        return;
+        //    }
+
+        //    if(mouseDown) {
+        //        clearTimeout(mouseTimer);
+        //        mouseDown = false;
+        //        // Click
+        //        self.invoke();
+        //    }
+        //}.bind(self));
     },
 
     snapToGrid: function () {
@@ -143,17 +164,17 @@ Item.prototype = {
         this.container = new createjs.Container();
         this.container.cursor = "pointer";
 
-        this.layer.container.addChild(this.container);
+        var hitArea = new createjs.Shape();
+        hitArea.graphics.beginFill("#000").drawRect(-45, -45, 90, 90);
+        this.container.hitArea = hitArea;
+
+        this.layer.addChild(this.container);
 
         this.replace();
 
         // icon
         var shape = new createjs.Shape();
         shape.graphics.beginFill("#fff").drawCircle(0, 0, 10);
-
-        var hitArea = new createjs.Shape();
-        hitArea.graphics.beginFill("#000").drawRect(-45, -45, 90, 90);
-        shape.hitArea = hitArea;
 
         this.container.addChild(shape);
 

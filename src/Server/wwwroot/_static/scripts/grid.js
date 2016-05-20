@@ -2,66 +2,144 @@
 var vouzamo = vouzamo || {};
 
 function Grid(apiUrl, canvasId) {
+    var canvas = document.getElementById(canvasId);
+    this.Stage_constructor(canvas);
+
     this.api = apiUrl;
     this.stage = {};
-    this.activeLayer = {};
 
     this.initialize(canvasId);
 }
 
-Grid.prototype = {
-    constructor: Grid,
+createjs.extend(Grid, createjs.Stage);
 
-    resize: function() {
-        var width = window.innerWidth;
-        var height = window.innerHeight;
+Grid.prototype.resize = function() {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
 
-        this.stage.canvas.width = width;
-        this.stage.canvas.height = height;
-    },
+    this.canvas.width = width;
+    this.canvas.height = height;
+};
 
-    setEventListeners: function () {
-        var self = this;
+Grid.prototype.setEventListeners = function () {
+    var self = this;
 
-        // Resize / Orientation Change
-        window.addEventListener("resize", function () {
-            self.resize();
-        }.bind(self));
+    // Resize / Orientation Change
+    window.addEventListener("resize", function () {
+        self.resize();
+    }.bind(self));
 
-        // Stage Update / Tick
-        createjs.Ticker.addEventListener("tick", function (event) {
-            self.stage.update(event);
-        }.bind(self));
-    },
+    // Stage Update / Tick
+    createjs.Ticker.addEventListener("tick", function (event) {
+        self.update(event);
+    }.bind(self));
 
-    createStage: function(canvasId) {
-        var canvas = document.getElementById(canvasId);
-        var stage = new createjs.Stage(canvas);
+    var dragging = false;
+    var dragStart = new createjs.Point();
+    var dragOffset = new createjs.Point();
+    var mouseDown, mouseHeld = false;
+    var mouseTimer;
+    var mouseTargets;
 
-        stage.enableMouseOver();
-        createjs.Touch.enable(stage);
+    self.addEventListener("stagemousedown", function (event) {
+        event.preventDefault();
 
-        this.stage = stage;
+        dragStart.x = self.mouseX;
+        dragStart.y = self.mouseY;
 
-        this.resize();
+        dragOffset = dragStart;
 
-        this.loadLayer(window.location.pathname);
-    },
+        if (!mouseDown) {
+            // dragstart
+            dragging = true;
+            mouseDown = true;
+            mouseHeld = false;
+            clearTimeout(mouseTimer);
+            mouseTargets = self.getObjectsUnderPoint(self.mouseX, self.mouseY, 2);
+            
+            mouseTargets.forEach(function (instance) {
+                var event = new createjs.Event("griddragstart");
+                event.data = {
+                    x: self.mouseX,
+                    y: self.mouseY
+                }
+                instance.dispatchEvent(event);
+            });
 
-    loadLayer: function(layerId) {
-        // Transition(s)?
-        this.activeLayer = new Layer(this, layerId);
-    },
+            mouseTimer = setTimeout(function () {
+                mouseTargets.forEach(function (instance) {
+                    var event = new createjs.Event("gridhold");
+                    instance.dispatchEvent(event);
+                });
+                mouseHeld = true;
+            }.bind(self), 400);
+        }
 
-    initialize: function (canvasId) {
-        // Frames Per Second
-        createjs.Ticker.setFPS(24);
+    }.bind(self));
 
-        this.createStage(canvasId);
+    self.addEventListener("stagemousemove", function (event) {
+        event.preventDefault();
 
-        this.setEventListeners();
-    }
-}
+        if (dragging) {
+            mouseTargets.forEach(function (instance) {
+                var event = new createjs.Event("griddragmove");
+                instance.dispatchEvent(event);
+            });
+        }
+    }.bind(self));
+
+    self.addEventListener("stagemouseup", function (event) {
+        event.preventDefault();
+
+        if (mouseDown) {
+
+            if (!mouseHeld) {
+                clearTimeout(mouseTimer);
+                mouseTargets.forEach(function (instance) {
+                    var event = new createjs.Event("gridclick");
+                    event.data = {
+                        x: self.mouseX,
+                        y: self.mouseY
+                    }
+                    instance.dispatchEvent(event);
+                });
+            }
+
+            mouseTargets.forEach(function (instance) {
+                var event = new createjs.Event("griddragfinish");
+                event.data = {
+                    x: self.mouseX,
+                    y: self.mouseY
+                }
+                instance.dispatchEvent(event);
+            });
+
+            dragging = false;
+        }
+
+        mouseDown = false;
+    }.bind(self));
+};
+
+Grid.prototype.loadLayer = function(layerId) {
+    // Transition(s)?
+    this.addChild(new Layer(this, layerId));
+};
+
+Grid.prototype.initialize = function (canvasId) {
+    // Frames Per Second
+    createjs.Ticker.setFPS(24);
+
+    this.enableMouseOver();
+    createjs.Touch.enable(this);
+
+    this.resize();
+    this.loadLayer(window.location.pathname);
+
+    this.setEventListeners();
+};
+
+createjs.promote(Grid, "Stage");
 
 //var grid = grid ? grid : {};
 

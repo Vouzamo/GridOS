@@ -9,8 +9,6 @@ function Layer(grid, layerId) {
     this.spacing = 100;
     this.isDragging = false;
     this.dragOffset = new createjs.Point();
-    this.placeholders = {};
-    this.placeholdersMatrix = new Matrix2D();
     this.matrix = new Matrix2D();
 
     this.initialize();
@@ -68,21 +66,17 @@ Layer.prototype.setEventListeners = function () {
 };
 
 Layer.prototype.clearItems = function() {
-    this.matrix.clearAll();
-    this.removeAllChildren();
-    this.addChild(this.placeholders);
-};
-
-Layer.prototype.addPlaceholderItems = function () {
     var self = this;
 
-    for (var x = -7; x <= 7; x++) {
-        for (var y = -4; y <= 4; y++) {
-            if (self.matrix.isEmpty(x, y)) {
-                self.placeholdersMatrix.set(x, y, new Placeholder(self, { x: x * self.spacing, y: y * self.spacing }));
-            }
-        }
-    }
+    self.matrix.clearAll();
+    self.removeAllChildren();
+
+    self.addChild(new Placeholders({
+        x: -1000,
+        y: -800,
+        width: 2000,
+        height: 1600
+    }, self.spacing));
 };
 
 Layer.prototype.loadItems = function () {
@@ -112,11 +106,7 @@ Layer.prototype.loadItems = function () {
 };
 
 Layer.prototype.initialize = function () {
-    this.placeholders = new createjs.Container();
-
     this.center();
-
-    this.addPlaceholderItems();
 
     this.loadItems();
 

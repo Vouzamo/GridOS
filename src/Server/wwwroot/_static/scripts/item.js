@@ -25,24 +25,32 @@ Item.prototype = {
     setEventListeners: function () {
         var self = this;
 
+        var isMoving = false;
+
         self.container.on("gridclick", function (event) {
             console.log("grid click " + self.item.name);
         });
 
         self.container.on("gridhold", function (event) {
             console.log("grid hold " + self.item.name);
+            isMoving = true;
         });
 
         self.container.on("griddragstart", function (event) {
             console.log("grid drag start " + self.item.name);
+            self.layer.canDrag = false;
         });
 
         self.container.on("griddragmove", function (event) {
             console.log("grid drag move " + self.item.name);
+            if (isMoving) {
+                console.log("moving!");
+            }
         });
 
         self.container.on("griddragfinish", function (event) {
             console.log("grid drag finish " + self.item.name);
+            isMoving = false;
         });
 
         //var stage = self.layer.grid;

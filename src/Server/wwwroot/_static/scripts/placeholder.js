@@ -1,38 +1,30 @@
 ﻿// namespace
 var vouzamo = vouzamo || {};
 
-function Placeholder(layer, position) {
-    this.layer = layer;
-    this.container = {}
+function Placeholder(position) {
+    this.Shape_constructor();
 
     this.initialize(position);
 }
 
-Placeholder.prototype = {
-    constructor: Placeholder,
+createjs.extend(Placeholder, createjs.Shape);
 
-    setEventListeners: function() {
+Placeholder.prototype.setEventListeners = function() {
 
-    },
+};
 
-    initialize: function (position) {
-        this.container = new createjs.Container();
-        this.container.x = position.x;
-        this.container.y = position.y;
-        this.container.alpha = 0.1;
-        //this.container.cursor = "pointer";
+Placeholder.prototype.initialize = function (position) {
+    this.x = position.x;
+    this.y = position.y;
+    this.alpha = 0.1;
 
-        this.layer.placeholders.addChild(this.container);
+    this.graphics.beginFill("#000").drawCircle(0, 0, 5);
 
-        var shape = new createjs.Shape();
-        shape.graphics.beginFill("#000").drawCircle(0, 0, 5);
+    var hitArea = new createjs.Shape();
+    hitArea.graphics.beginFill("#000").drawRect(-10, -10, 20, 20);
+    this.hitArea = hitArea;
 
-        var hitArea = new createjs.Shape();
-        hitArea.graphics.beginFill("#000").drawRect(-10, -10, 20, 20);
-        shape.hitArea = hitArea;
+    this.setEventListeners();
+};
 
-        this.container.addChild(shape);
-
-        this.setEventListeners();
-    }
-}
+createjs.promote(Placeholder, "Shape");

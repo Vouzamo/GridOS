@@ -134,6 +134,8 @@ Grid.prototype.initialize = function (canvasId) {
     createjs.Touch.enable(this);
 
     this.resize();
+
+    // load the layer
     this.loadLayer(window.location.pathname);
 
     this.setEventListeners();
